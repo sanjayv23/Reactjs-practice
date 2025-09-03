@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chatbot</title>
+</head>
+<body>
+    <div class="js-container"></div>
+    
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+
+    <script type="text/babel">
+       const container = document.querySelector('.js-container');
+       const root=ReactDOM.createRoot(container);
+       
+       function ChatInput(){
+           return (
+               <>
+                   <input 
+                    placeholder="Type your message here..." 
+                    size="30">
+                   </input>
+                   <button>send</button>
+               </>
+           )
+       }
+       
+       function ChatMessage(props){
+
+           const message = props.message;
+           const role=props.role;  
+           return (
+               <div>
+                    {role=="bot" && <img src="/robot.png" alt="userimg" width="30" height="30"/> }
+                    {message}
+                    {role=="user" &&<img src="/user.png" alt="userimg" width="30" height="30"/> }
+               </div>
+           )
+       }
+       const app=(
+           <>
+               <ChatInput />
+               <ChatMessage message="Hello" role="user" />
+               <ChatMessage message="Hello, how can I help you?" role="bot"/>
+               <ChatMessage message="what is the today'date" role="user" />
+               <ChatMessage message="Today is sep 02,2025" role="bot"/>
+               <ChatMessage message="Thanks for the date" role="user"/>
+
+           </>
+       )
+       root.render(app);
+    </script>
+</body>
+</html>
