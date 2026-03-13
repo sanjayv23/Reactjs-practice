@@ -2,6 +2,7 @@ import "./CheckoutPage-header.css";
 import "./CheckoutPage.css";
 import dayjs from "dayjs";
 import axios from "axios";
+import { Navigate } from "react-router";
 import { useState, useEffect } from "react";
 export function CheckoutPage({ cart }) {
   const [deliveryOptions, setDeliveryOptions] = useState([]);
@@ -19,7 +20,7 @@ export function CheckoutPage({ cart }) {
       });  
 
 
-  }, []);
+  }, [cart]);
 
   return (
     <>
@@ -83,10 +84,27 @@ export function CheckoutPage({ cart }) {
                             {cartitem.quantity}
                           </span>
                         </span>
-                        <span className="update-quantity-link link-primary">
+                        <span className="update-quantity-link link-primary"
+                          onClick={
+                            async()=>{
+                              await axios.put(`/api/cart-items/${cartitem.productId}`,{
+                                quantity:cartitem.quantity+1,
+                              });
+          
+                            }
+                          }
+                        >
                           Update
                         </span>
-                        <span className="delete-quantity-link link-primary">
+                        <span className="delete-quantity-link link-primary"
+                          onClick={
+                            async()=>{
+                              await axios.put(`/api/cart-items/${cartitem.productId}`,{
+                                quantity:cartitem.quantity-1,
+                              });
+                            }
+                          }
+                        >
                           Delete
                         </span>
                       </div>
@@ -103,13 +121,20 @@ export function CheckoutPage({ cart }) {
                         }
                         
                         return (
-                          <div key={deliveryOption.id} className="delivery-option">
+                          <div key={deliveryOption.id} className="delivery-option"
+                            onClick={async()=>{
+                              await axios.put(`/api/cart-items/${cartitem.productId}`,{
+                                deliveryOptionId: deliveryOption.id
+                              })
+                            }}
+                          >
                             
                             <input
                               type="radio"
                               checked={deliveryOption.id===cartitem.deliveryOptionId}
                               className="delivery-option-input"
                               name={`delivery-option-${cartitem.productId}`}
+                              onChange={()=>{}}
                             />
                             <div>
                               <div className="delivery-option-date">
@@ -160,7 +185,11 @@ export function CheckoutPage({ cart }) {
               <div className="payment-summary-money">${paymentSummary && (paymentSummary.totalCostCents/100).toFixed(2)}</div>
             </div>
 
-            <button className="place-order-button button-primary">
+            <button className="place-order-button button-primar" onClick={async () => {
+    await axios.post('/api/orders');
+   
+    Navigate('/orders');
+  }}>
               Place your order
             </button>
           </div>
